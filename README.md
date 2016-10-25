@@ -1,34 +1,35 @@
-# Project 1 - flix
+# Project 2 - Yelp
 
-<img src='https://github.com/BCJonesey/flix/blob/master/icon.png' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+Yelp is a Yelp search app using the [Yelp API](http://www.yelp.com/developers/documentation/v2/search_api).
 
-flix is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
-
-Time spent: 10 hours spent in total
+Time spent: 6 hours spent in total
 
 ## User Stories
 
 The following **required** functionality is completed:
 
-- [x] User can view a list of movies currently playing in theaters. Poster images load asynchronously.
-- [x] User can view movie details by tapping on a cell.
-- [x] User sees loading state while waiting for the API.
-- [x] User sees an error message when there is a network error.
-- [x] User can pull to refresh the movie list.
+- [X] Search results page
+   - [X] Table rows should be dynamic height according to the content height.
+   - [X] Custom cells should have the proper Auto Layout constraints.
+   - [X] Search bar should be in the navigation bar (doesn't have to expand to show location like the real Yelp app does).
+- [X] Filter page. Unfortunately, not all the filters are supported in the Yelp API.
+   - [X] The filters you should actually have are: category, sort (best match, distance, highest rated), distance, deals (on/off).
+   - [X] The filters table should be organized into sections as in the mock.
+   - [X] You can use the default UISwitch for on/off states.
+   - [X] Clicking on the "Search" button should dismiss the filters page and trigger the search w/ the new filter settings.
+   - [X] Display some of the available Yelp categories (choose any 3-4 that you want).
 
 The following **optional** features are implemented:
 
-- [x] Add a tab bar for **Now Playing** and **Top Rated** movies.
-- [x] Implement segmented control to switch between list view and grid view.
-- [x] Add a search bar.
-- [x] All images fade in.
-- [x] For the large poster, load the low-res image first, switch to high-res when complete.
-- [x] Customize the highlight and selection effect of the cell.
-- [x] Customize the navigation bar.
+- [ ] Filter page
+   - [X] Distance filter should expand as in the real Yelp app
 
-The following **additional** features are implemented:
 
-- [x] User can see a trailer for the movie in the app
+
+Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
+
+1. Better ways to have a nav bar on a modal
+2. Better expanding cells
 
 ## Video Walkthrough
 
@@ -44,7 +45,7 @@ Describe any challenges encountered while building the app.
 
 ## License
 
-    Copyright [2016] [Ben Jones]
+    Copyright [yyyy] [name of copyright owner]
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
