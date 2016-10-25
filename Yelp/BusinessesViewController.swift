@@ -11,7 +11,7 @@ import UIKit
 class BusinessesViewController: UIViewController {
     
     
-    
+    var searchBar: UISearchBar!
     var businesses: [Business]!
     var searchSettings : SearchSettings!
     
@@ -20,16 +20,19 @@ class BusinessesViewController: UIViewController {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(UINib(nibName: "BusinessTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "BusinessTableViewCell")
         //tableView.rowHeight = UITableViewAutomaticDimension
         searchSettings = SearchSettings()
-        //searchSettings.searchTerm = "Thai"
-        searchSettings.executeSearch(completion: { (businesses: [Business]?, error: Error?) -> Void in
-            
-            self.businesses = businesses
-            self.tableView.reloadData()
-            }
-        )
         
+        
+        // Initialize the UISearchBar
+        searchBar = UISearchBar()
+        searchBar.delegate = self
+        
+        // Add SearchBar to the NavigationBar
+        
+        navigationItem.titleView = searchBar
+        searchBar.sizeToFit()
         
         
         /* Example of Yelp search with more search options specified
@@ -42,7 +45,7 @@ class BusinessesViewController: UIViewController {
          }
          }
          */
-        
+        self.executeSearch()
     }
     
     override func didReceiveMemoryWarning() {
@@ -57,6 +60,17 @@ class BusinessesViewController: UIViewController {
         settingsViewController.delegate = self
         
     }
+    
+    func executeSearch() {
+        searchSettings.executeSearch(completion: { (businesses: [Business]?, error: Error?) -> Void in
+            
+            self.businesses = businesses
+            self.tableView.reloadData()
+            }
+        )
+    }
+    
+  
  
     
 }
@@ -69,7 +83,7 @@ extension BusinessesViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "com.benjones.businesscell", for: indexPath as IndexPath) as! BusinessTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "BusinessTableViewCell", for: indexPath as IndexPath) as! BusinessTableViewCell
         
 
         cell.business = businesses![indexPath.row]
@@ -84,11 +98,33 @@ extension BusinessesViewController: UITableViewDelegate, UITableViewDataSource {
 extension BusinessesViewController: SettingsViewControllerDelegate{
     func settingsViewControllerDidSaveSettings(controller: SettingsViewController, newValue: SearchSettings) {
         self.searchSettings = newValue
-        self.searchSettings.executeSearch(completion: { (businesses: [Business]?, error: Error?) -> Void in
-            
-            self.businesses = businesses
-            self.tableView.reloadData()
-            }
-        )
+        self.executeSearch()
+    }
+}
+
+// SearchBar methods
+extension BusinessesViewController: UISearchBarDelegate {
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.setShowsCancelButton(true, animated: true)
+        return true
+    }
+    
+    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.setShowsCancelButton(false, animated: true)
+        return true
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        self.searchSettings.searchTerm = searchBar.text!
+        self.executeSearch()
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.searchSettings.searchTerm = searchBar.text!
+        self.executeSearch()
+        searchBar.resignFirstResponder()
     }
 }

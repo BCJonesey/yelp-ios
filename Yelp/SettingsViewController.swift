@@ -14,6 +14,7 @@ protocol SettingsViewControllerDelegate: class {
 
 class SettingsViewController: UIViewController {
     
+    @IBOutlet weak var viewSection: UIView!
     var distanceExpanded : Bool = false
     var sortExpanded : Bool = false
     var searchSettings : SearchSettings = SearchSettings()
@@ -24,7 +25,10 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+
         // Do any additional setup after loading the view.
+        viewSection.backgroundColor = UIColor(red: 211/(256.0), green: 35/(256.0), blue: 35/(256.0), alpha: 256/(256.0))
+
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -42,12 +46,15 @@ class SettingsViewController: UIViewController {
         delegate?.settingsViewControllerDidSaveSettings(controller: self, newValue: searchSettings.copy() as! SearchSettings)
         dismiss(animated: true, completion: nil)
     }
+    @IBAction func cancelButtonPressed(_ sender: AnyObject) {
+        dismiss(animated: true, completion: nil)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
+  
     /*
     // MARK: - Navigation
 
@@ -93,7 +100,7 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
             settingCell.title.text = "Offering a Deal"
             settingCell.value = "deal"
             settingCell.category = "popular"
-            settingCell.switchControl.isOn = searchSettings.deal
+            settingCell.switchControl.isOn = searchSettings.deal 
             settingCell.delegate = self
             cell = settingCell
         case 1:
@@ -103,7 +110,7 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.textLabel?.text = SearchSettings.distanceOptions[key]
                 cell.imageView?.image = searchSettings.distance == key ? #imageLiteral(resourceName: "leftArrowBlue") : #imageLiteral(resourceName: "leftArrowGrey")
             } else {
-                cell.textLabel?.text = SearchSettings.distanceOptions[searchSettings.distance]
+                cell.textLabel?.text = searchSettings.distance == nil ? "Auto" : SearchSettings.distanceOptions[searchSettings.distance!]
                 cell.imageView?.image = #imageLiteral(resourceName: "downArrow")
             }
             
