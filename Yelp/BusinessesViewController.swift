@@ -10,23 +10,27 @@ import UIKit
 
 class BusinessesViewController: UIViewController {
     
-    var businesses: [Business]!
     
+    
+    var businesses: [Business]!
+    var searchSettings : SearchSettings!
+    
+    @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
+        tableView.delegate = self
+        tableView.dataSource = self
+        //tableView.rowHeight = UITableViewAutomaticDimension
+        searchSettings = SearchSettings()
+        //searchSettings.searchTerm = "Thai"
+        searchSettings.executeSearch(completion: { (businesses: [Business]?, error: Error?) -> Void in
             
             self.businesses = businesses
-            if let businesses = businesses {
-                for business in businesses {
-                    print(business.name!)
-                    print(business.address!)
-                }
-            }
-            
+            self.tableView.reloadData()
             }
         )
+        
+        
         
         /* Example of Yelp search with more search options specified
          Business.searchWithTerm("Restaurants", sort: .Distance, categories: ["asianfusion", "burgers"], deals: true) { (businesses: [Business]!, error: NSError!) -> Void in
@@ -46,14 +50,45 @@ class BusinessesViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let settingsViewController = segue.destination as! SettingsViewController
+        settingsViewController.searchSettings =  searchSettings.copy() as! SearchSettings
+        settingsViewController.delegate = self
+        
+    }
+ 
+    
+}
+
+
+extension BusinessesViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return (self.businesses ?? []).count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "com.benjones.businesscell", for: indexPath as IndexPath) as! BusinessTableViewCell
+        
+
+        cell.business = businesses![indexPath.row]
+        cell.repaint()
+
+        
+        return cell
+    }
+    
+}
+
+extension BusinessesViewController: SettingsViewControllerDelegate{
+    func settingsViewControllerDidSaveSettings(controller: SettingsViewController, newValue: SearchSettings) {
+        self.searchSettings = newValue
+        self.searchSettings.executeSearch(completion: { (businesses: [Business]?, error: Error?) -> Void in
+            
+            self.businesses = businesses
+            self.tableView.reloadData()
+            }
+        )
+    }
 }

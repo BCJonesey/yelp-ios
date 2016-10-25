@@ -84,6 +84,7 @@ class Business: NSObject {
         return businesses
     }
     
+    
     class func searchWithTerm(term: String, completion: @escaping ([Business]?, Error?) -> Void) {
         _ = YelpClient.sharedInstance.searchWithTerm(term, completion: completion)
     }
